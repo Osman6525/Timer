@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 80px;
+    }
+    .timer-container {
+      background: #fff;
+      padding: 32px 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .timer-display {
+      font-size: 3em;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+    .controls input {
+      width: 80px;
+      font-size: 1.2em;
+      padding: 6px;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .controls button {
+      font-size: 1.1em;
+      padding: 8px 18px;
+      border: none;
+      border-radius: 5px;
+      background: #3b82f6;
+      color: #fff;
+      cursor: pointer;
+      margin-right: 6px;
+      transition: background 0.2s;
+    }
+    .controls button:active {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-container">
+    <div class="timer-display" id="timer">00:00</div>
+    <div class="controls">
+      <input type="number" id="secondsInput" placeholder="Seconds" min="1">
+      <button onclick="startTimer()">Start</button>
+      <button onclick="resetTimer()">Reset</button>
+    </div>
+  </div>
+  <script>
+    let timerInterval;
+    let remainingSeconds = 0;
+
+    function updateTimerDisplay() {
+      const minutes = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+      const seconds = String(remainingSeconds % 60).padStart(2, '0');
+      document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      const input = document.getElementById('secondsInput');
+      if (!timerInterval) {
+        if (input.value && Number(input.value) > 0) {
+          remainingSeconds = Number(input.value);
+        }
+        if (remainingSeconds <= 0) {
+          alert('Please enter a valid number greater than 0.');
+          return;
+        }
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          if (remainingSeconds > 0) {
+            remainingSeconds--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            alert('Time is up!');
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      remainingSeconds = 0;
+      updateTimerDisplay();
+      document.getElementById('secondsInput').value = '';
+    }
+
+    // Initialize display
+    updateTimerDisplay();
+  </script>
+</body>
+</html>
